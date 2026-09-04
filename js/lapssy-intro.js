@@ -40,6 +40,7 @@
     ov.setAttribute("aria-hidden", "true");
     ov.innerHTML =
       '<div class="lazzy-intro-inner">' +
+        '<img class="lazzy-intro-logo" src="Lapssy logo.png" alt="" draggable="false">' +
         '<div class="lazzy-intro-word" id="lazzyWord">' +
           '<span class="lz-ch">L</span>' +
           '<span class="lz-ch">A</span>' +
@@ -92,6 +93,10 @@
       finish(true);
       document.removeEventListener("keydown", onKey);
     });
+
+    /* logo fades in first, unbothered */
+    var logoEl = ov.querySelector(".lazzy-intro-logo");
+    if (logoEl) logoEl.classList.add("lz-logo-in");
 
     /* skip hint: shows itself eventually, doesn't insist */
     T(function () { skipHint.classList.add("lz-skip-in"); }, 1200);
