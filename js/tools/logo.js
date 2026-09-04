@@ -39,12 +39,70 @@
               mResetPadding: document.getElementById("logoDetailResetPadding"),
               mDelete: document.getElementById("logoDetailDelete"),
             };
+            /* ---- workspace toolbar wiring (presentation extras) ---- */
+            this.els.countChip = document.getElementById("logoCountChip");
+            
+            this.els.moreBtn = document.getElementById("logoMoreBtn");
+            this.els.moreMenu = document.getElementById("logoMoreMenu");
+            this.els.dropHint = document.querySelector("#dropZone .lz-drop-hint");
             Core.Utils.createDropZone(this.els.dropZone, (f) =>
               this.handleFiles(f),
             );
             this.els.input.onchange = (e) => {
               this.handleFiles([...e.target.files]);
               this.els.input.value = "";
+            };
+            /* empty-state CTA mirrors the main input */
+            const emptyCTAInput = document.querySelector(
+              "#logoEmpty input[data-lz-input='logoInput']",
+            );
+            if (emptyCTAInput)
+              emptyCTAInput.onchange = (e) => {
+                this.handleFiles([...e.target.files]);
+                emptyCTAInput.value = "";
+              };
+            /* More menu (clear/guide live inside) */
+            if (this.els.moreBtn && this.els.moreMenu) {
+              this.els.moreBtn.onclick = (e) => {
+                e.stopPropagation();
+                this.els.moreMenu.classList.toggle("open");
+              };
+              document.addEventListener("click", () =>
+                this.els.moreMenu.classList.remove("open"),
+              );
+              document.addEventListener("keydown", (e) => {
+                if (e.key === "Escape")
+                  this.els.moreMenu.classList.remove("open");
+              });
+            }
+            /* toolbar Download All mirrors the rail button */
+            /* live count chip */
+            this.refreshCountChip = () => {
+              const n = this.cards.length;
+              if (this.els.countChip)
+                this.els.countChip.textContent = n
+                  ? n + (n === 1 ? " logo" : " logos")
+                  : "0 logos";
+              /* empty state + drop hint visibility */
+              if (this.els.empty)
+                this.els.empty.style.display = n === 0 ? "flex" : "none";
+              if (this.els.dropZone)
+                this.els.dropZone.style.display = n === 0 ? "none" : "block";
+            };
+            const origCreate = this.createCard.bind(this);
+            const origRemove = this.removeCard.bind(this);
+            const origDestroy = this.destroy.bind(this);
+            this.createCard = (f) => {
+              origCreate(f);
+              this.refreshCountChip();
+            };
+            this.removeCard = (o) => {
+              origRemove(o);
+              this.refreshCountChip();
+            };
+            this.destroy = () => {
+              origDestroy();
+              this.refreshCountChip();
             };
             const redrawAll = () => this.cards.forEach((c) => this.draw(c));
             const redrawAllDebounced = Core.Utils.debounce(redrawAll, 50);
@@ -93,6 +151,13 @@
                   });
               }
             };
+            /* focus footer/top controls (new markup, same functions) */
+            const closeX = document.getElementById("logoDetailCloseX");
+            if (closeX) closeX.onclick = () => this.closeDetail();
+            const prevBtn = document.getElementById("logoDetailPrev");
+            if (prevBtn) prevBtn.onclick = () => this.goDetail(-1);
+            const nextBtn = document.getElementById("logoDetailNext");
+            if (nextBtn) nextBtn.onclick = () => this.goDetail(1);
             const redrawModal = () => {
               const obj = this.cards[this.activeDetailIndex];
               if (obj) this.draw(obj);
@@ -203,7 +268,7 @@
             const progress = document.getElementById("logoProgress");
             const statusText = document.getElementById("logoStatusText");
             if (progress) progress.classList.add("active");
-            if (statusText) statusText.innerText = "Pulling images out of " + file.name + "…";
+            if (statusText) statusText.innerText = "Digging through " + file.name + "...";
             
             try {
               const zip = await JSZip.loadAsync(file);
@@ -445,17 +510,51 @@
           createCard(file) {
             const card = document.createElement("div");
             card.className = "logo-card-item";
-            card.style.cssText =
-              "display:flex; flex-direction:column; border-radius:6px; overflow:hidden; transition:background 280ms cubic-bezier(0.3, 0.7, 0.3, 1), border-color 280ms cubic-bezier(0.3, 0.7, 0.3, 1), transform 140ms cubic-bezier(0.3, 0.7, 0.3, 1); position:relative;";
             let baseName = file.name.replace(/\.[^/.]+$/, "").substring(0, 30);
-            card.innerHTML = `<div style="display:flex; justify-content:space-between; align-items:center; padding:12px; border-bottom:1px solid var(--border);"><input data-guide="Edit the exported filename for this individual logo." class="card-fname-lbl liquid-input" style="font-size:0.75rem; color:var(--text-muted); font-weight:600; padding:2px 6px; height:24px; max-width:150px; background:transparent; outline:none;" value="${baseName}" /><button data-guide="Remove this logo from the workspace." class="liquid-btn icon-only danger-btn card-rm" style="width:28px; height:28px; padding:0; display:flex; align-items:center; justify-content:center;"><i data-lucide="trash-2" style="width:14px; height:14px;"></i></button></div><div data-guide="Click to open Focus Mode to inspect or copy this logo in full detail." class="card-preview-area" style="background-image:radial-gradient(var(--border) 1px, transparent 1px); background-size:15px 15px; position:relative; display:flex; justify-content:center; align-items:center; padding:3px; cursor:pointer; min-height:220px; flex:1; border-bottom:1px solid var(--border);"><canvas style="max-width:100%; max-height:100%; object-fit:contain; border:1px solid var(--border); background:#fff;"></canvas><div class="hover-overlay" style="position:absolute; inset:0; background:rgba(0,0,0,0.5); opacity:0; display:flex; align-items:center; justify-content:center; transition:opacity 400ms cubic-bezier(0.3, 0.7, 0.3, 1);"><span style="background:var(--bg-panel); border:1px solid var(--border); padding:6px 12px; border-radius:6px; font-size:0.75rem; text-transform:uppercase; letter-spacing:1px; font-weight:bold;">Focus Mode</span></div></div><div style="padding:16px; display:flex; flex-direction:column; gap:12px;"><div style="display:flex; flex-direction:column; gap:6px;"><span style="font-size:0.8rem; font-weight:bold; color:var(--text-muted);">Overlay Label</span><textarea data-guide="Type a custom label or notation to overlay on this logo." class="liquid-input card-text" rows="1" placeholder="Type design label..." style="resize:none; padding:8px; font-size:0.75rem; height:34px;"></textarea></div><div style="display:flex; justify-content:space-between; align-items:center; gap:10px;"><div style="display:flex; align-items:center; gap:8px;"><span style="font-size:0.8rem; font-weight:bold; color:var(--text-muted);">Size Override:</span><input data-guide="Set a specific font size for this logo. Overrides global settings." type="number" class="liquid-input card-local-font-inp" placeholder="Auto" style="width:60px; height:26px; font-size:0.7rem; text-align:center; padding:4px;" /></div><button data-guide="Take just this one home." class="liquid-btn icon-only active-mode card-dl" style="width:28px; height:28px; padding:0; display:flex; align-items:center; justify-content:center;"><i data-lucide="download" style="width:14px; height:14px;"></i></button></div></div>`;
+            /* Compact batch card: preview-dominant + filename + hover actions.
+               All original hooks (classes) preserved for Focus Mode wiring. */
+            card.innerHTML = `
+              <div class="card-preview-area" data-guide="Click to open Focus Mode to inspect or edit this logo in full detail.">
+                <canvas></canvas>
+                <div class="hover-overlay"><span>Focus Mode</span></div>
+              </div>
+              <div class="card-foot">
+                <input class="card-fname-lbl" value="${baseName}" title="${baseName}" data-guide="Edit the exported filename for this individual logo." />
+                <button class="card-dl liquid-btn icon-only" title="Download this logo" data-guide="Download this individual logo."><i data-lucide="download"></i></button>
+                <button class="card-rm liquid-btn icon-only danger-btn" title="Delete this logo" data-guide="Remove this logo from the workspace."><i data-lucide="trash-2"></i></button>
+              </div>
+              <input class="card-text-quick" placeholder="Label..." value="" title="Overlay label for this logo" data-guide="Type a quick label for this logo. More options in Focus Mode." />`;
             const canvas = card.querySelector("canvas");
             const hoverOverlay = card.querySelector(".hover-overlay");
-            const textInput = card.querySelector(".card-text");
-            const localFontInp = card.querySelector(".card-local-font-inp");
+            /* text + per-card font override live in Focus Mode now;
+               keep hidden elements so existing state/edit logic keeps working */
+            const textInput = document.createElement("textarea");
+            textInput.className = "card-text";
+            textInput.setAttribute("hidden", "");
+            card.appendChild(textInput);
+            const localFontInp = document.createElement("input");
+            localFontInp.type = "number";
+            localFontInp.className = "card-local-font-inp";
+            localFontInp.setAttribute("hidden", "");
+            card.appendChild(localFontInp);
             const dlBtn = card.querySelector(".card-dl");
             const rmBtn = card.querySelector(".card-rm");
             const fnameLbl = card.querySelector(".card-fname-lbl");
+            /* quick label: edit without leaving the grid (mirrors Focus text) */
+            const quickLabel = card.querySelector(".card-text-quick");
+            quickLabel.oninput = () => {
+              obj.text = quickLabel.value;
+              textInput.value = obj.text;
+              if (this.els.syncFilename.checked && obj.text.trim()) {
+                obj.fname = Core.Utils.sanitize(obj.text.trim().substring(0, 30));
+                obj.els.fname.value = obj.fname;
+                if (this.activeDetailIndex === this.cards.indexOf(obj)) {
+                  this.els.mFname.value = obj.fname;
+                }
+              }
+              this.draw(obj);
+            };
+            quickLabel.onclick = (e) => e.stopPropagation();
             lucide.createIcons({ root: card });
             const img = new Image();
             img.src = Core.BlobRegistry.create(file);
@@ -486,6 +585,8 @@
             };
             textInput.oninput = Core.Utils.debounce(() => {
               obj.text = textInput.value;
+              const ql = card.querySelector(".card-text-quick");
+              if (ql) ql.value = obj.text;
               if (this.els.syncFilename.checked && obj.text.trim()) {
                 obj.fname = Core.Utils.sanitize(
                   obj.text.trim().substring(0, 30),
@@ -551,9 +652,15 @@
               
               const globFont = this.getGlobalFont();
               c.els.localFontInp.placeholder = `Auto (${globFont}px)`;
-              c.canvas.width = tW;
-              c.canvas.height = tH;
-              this.performDraw(c.canvas, c, tW, tH);
+              /* GRID PREVIEW: true to the source image — natural size,
+                 transparent background. Export framing lives in Focus. */
+              let pW = parseInt(this.els.width.value, 10);
+              let pH = parseInt(this.els.height.value, 10);
+              if (isNaN(pW) || pW <= 0) pW = c.img.naturalWidth || 300;
+              if (isNaN(pH) || pH <= 0) pH = c.img.naturalHeight || 400;
+              c.canvas.width = pW;
+              c.canvas.height = pH;
+              this.performDraw(c.canvas, c, pW, pH, "transparent");
               if (
                 this.activeDetailIndex === this.cards.indexOf(c) &&
                 this.els.mOverlay.classList.contains("active")
@@ -565,12 +672,14 @@
               }
             });
           },
-          performDraw(canvas, c, tW, tH) {
+          performDraw(canvas, c, tW, tH, bg) {
             const ctx = canvas.getContext("2d");
             ctx.imageSmoothingEnabled = true;
             ctx.imageSmoothingQuality = "high";
-            ctx.fillStyle = "#ffffff";
-            ctx.fillRect(0, 0, tW, tH);
+            if (bg !== "transparent") {
+              ctx.fillStyle = "#ffffff";
+              ctx.fillRect(0, 0, tW, tH);
+            }
             const pad =
               c.padding !== null
                 ? c.padding
@@ -718,6 +827,7 @@
             const obj = this.cards[index];
             this.els.mOverlay.classList.add("active");
             this.els.mIndex.innerText = `${index + 1} of ${this.cards.length}`;
+            if (this.els.mTitle) this.els.mTitle.textContent = obj.fname;
             this.els.mFname.value = obj.fname;
             this.els.mText.value = obj.text;
             this.els.mFontSize.value = obj.fontValOverride || "";
@@ -879,7 +989,7 @@
           },
           async exportAll() {
             if (!this.cards.length) return;
-            this.els.exportBtn.innerText = "Barely trying, still winning…";
+            this.els.exportBtn.innerText = "Packing them up…";
             this.els.exportBtn.disabled = true;
             const toast = document.getElementById("errorToast");
             toast.innerText = "Barely trying, still winning…";
@@ -913,7 +1023,7 @@
                 a.href = URL.createObjectURL(c);
                 a.download = "batch_logos.zip";
                 a.click();
-                this.els.exportBtn.innerText = "Bag it all";
+                this.els.exportBtn.innerText = "Download All";
                 this.els.exportBtn.disabled = false;
                 UI.showSuccess(this.els.exportBtn);
                 toast.classList.remove("visible");
@@ -923,7 +1033,7 @@
                 toast.classList.remove("visible");
                 toast.style.borderColor = "";
                 UI.showError("Export failed: " + err);
-                this.els.exportBtn.innerText = "Bag it all";
+                this.els.exportBtn.innerText = "Download All";
                 this.els.exportBtn.disabled = false;
               });
           },
