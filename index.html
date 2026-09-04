@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
     <title>LAZZY — Professional Way for Lazyness</title>
-    <link rel="icon" type="image/png" href="Toolkit%20logo.png">
+    <link rel="icon" type="image/png" sizes="64x64" href="favicon.png">`n    <link rel="apple-touch-icon" href="Lapssy logo.png">
     <link rel="manifest" href="manifest.json" />
     <link
       href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&family=Nunito+Sans:ital,opsz,wght@0,6..12,400;0,6..12,500;0,6..12,600;0,6..12,700&display=swap"
@@ -213,302 +213,154 @@
         </div>
         <div id="view-app">
           <div class="tool-section" id="section-logo">
-            <div class="tool-header">
-              <i data-lucide="image" class="tool-icon"></i>
-              <h2 style="flex: 1">Logo Workspace</h2>
-              <button
-                class="liquid-btn icon-only"
-                title="Make the links"
-                onclick="Tools.Logo.openLinkGen()"
-              >
-                <i data-lucide="link" style="width: 18px"></i>
-              </button>
-              <button
-                class="liquid-btn icon-only guide-trigger"
-                onclick="GuideEngine.open(this)"
-              >
-                <i data-lucide="info" style="width: 18px"></i>
-              </button>
-            </div>
-            <div class="editor-layout">
-              <div class="sidebar-panel">
-                <div
-                  class="drop-zone"
-                  id="dropZone"
-                  data-guide="Drag images, PPTX, or Excel files here to upload and extract logos."
-                >
-                  <label class="liquid-btn active-mode" style="width: 100%"
-                    ><input
-                      accept="image/*,.pptx,.xlsx,.xlsm"
-                      hidden
-                      id="logoInput"
-                      multiple
-                      type="file"
-                    /><i data-lucide="upload"></i>
-                    Feed it files
-                  </label
-                  >
-                  <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 12px; font-weight: 500;">Drop your problem here. We'll deal with it.</div>
+
+            <!-- ============ LOGO RESIZER TOOL BAR (compact, 70-90px) ============ -->
+            <div class="lz-toolbar" id="logoToolbar">
+              <div class="lz-toolbar-identity">
+                <img class="lz-toolbar-mascot" src="Lapssy logo.png" alt="" draggable="false">
+                <div class="lz-toolbar-text">
+                  <span class="lz-toolbar-title">LOGO RESIZER</span>
+                  <span class="lz-toolbar-tag">Fine. I'll resize it.</span>
                 </div>
-                                <div class="progress-container glass-panel" id="logoProgress">
-                  <div class="progress-text">
-                    <span id="logoStatusText">Pulling them out…</span>
-                  </div>
-                </div>
-<div
-                  id="logoControls"
-                  style="display: flex; flex-direction: column; gap: 25px"
-                >
-                  <div class="glass-panel control-group">
-                    <span class="label-header">Scribble settings</span>
-                    <div
-                      data-guide="Sets the typeface used for the text overlay on every logo card."
-                    >
-                      <select
-                        class="liquid-input persist-val"
-                        id="globalFontFamily"
-                        style="margin-bottom: 10px"
-                      >
-                        <option value="Arial">Arial</option>
-                        <option value="Century Gothic">Century Gothic (Body)</option>
-                        <option value="Calibri">Calibri</option>
-                        <option value="Comic Sans MS">Comic Sans MS</option>
-                        <option value="Courier New">Courier New (Fixed)</option>
-                        <option value="Georgia">Georgia (Serif)</option>
-                        <option value="Impact">Impact (Heavy)</option>
-                        <option value="Lucida Console">Lucida Console</option>
-                        <option value="Palatino Linotype">
-                          Palatino Linotype
-                        </option>
-                        <option value="Segoe UI">Segoe UI</option>
-                        <option value="Tahoma">Tahoma</option>
-                        <option value="Times New Roman">Times New Roman</option>
-                        <option value="Trebuchet MS">Trebuchet MS</option>
-                        <option value="Verdana">Verdana</option>
-                        <option value="sans-serif">Default Sans</option>
-                      </select>
-                    </div>
-                    <div style="display: flex; gap: 10px; align-items: center">
-                      <div
-                        style="flex: 1"
-                        data-guide="Sets the text size in pixels. Leave blank to auto-size based on the image."
-                      >
-                        <input
-                          class="liquid-input persist-val"
-                          id="fontSizeInput"
-                          placeholder="Font Size (px)"
-                          type="number"
-                          style="width: 100%"
-                        />
-                      </div>
-                      <div
-                        data-guide="Picks the color of the overlay text drawn on top of each logo."
-                        style="
-                          display: flex;
-                          flex-direction: column;
-                          align-items: center;
-                          justify-content: center;
-                          background: rgba(255, 255, 255, 0.03);
-                          border: 1px solid rgba(255, 255, 255, 0.08);
-                          border-radius: 6px;
-                          height: 40px;
-                          width: 40px;
-                          padding: 2px;
-                        "
-                      >
-                        <input
-                          id="fontColorPicker"
-                          class="persist-val"
-                          type="color"
-                          value="#000000"
-                          style="
-                            border: none;
-                            height: 100%;
-                            width: 100%;
-                            cursor: pointer;
-                            padding: 0;
-                            border-radius: 4px;
-                            background: transparent;
-                          "
-                          title="Font Color"
-                        />
-                      </div>
-                    </div>
-                    <div
-                      style="
-                        display: flex;
-                        align-items: center;
-                        justify-content: space-between;
-                        flex-wrap: wrap;
-                        gap: 10px;
-                        margin-top: 5px;
-                      "
-                    >
-                      <label
-                        data-guide="Toggles bold font weight for the overlay text."
-                        style="
-                          display: flex;
-                          gap: 10px;
-                          font-size: 0.95rem;
-                          align-items: center;
-                        "
-                        ><input
-                          class="toggle-switch small persist-chk"
-                          id="boldToggle"
-                          type="checkbox"
-                        />
-                        Bold</label
-                      ><label
-                        data-guide="Synchronizes the exported filename with the original filename."
-                        style="
-                          display: flex;
-                          gap: 10px;
-                          font-size: 0.95rem;
-                          align-items: center;
-                        "
-                        ><input
-                          class="toggle-switch small persist-chk"
-                          id="syncFilenameToggle"
-                          type="checkbox"
-                          checked
-                        />
-              Name it for me
-            </label
-            >
-                    </div>
-                  </div>
-                  <div class="glass-panel control-group">
-                    <span class="label-header">Nudging things</span>
-                    <div
-                      style="
-                        display: flex;
-                        flex-direction: column;
-                        gap: 5px;
-                        margin-bottom: 10px;
-                      "
-                    >
-                      <span
-                        class="label-header"
-                        style="font-size: 0.7rem; color: var(--text-muted)"
-                        >Padding (0 to 150, whatever)</span
-                      >
-                      <div
-                        data-guide="Adds empty space around the image inside the export canvas, from 0 to 150px."
-                      >
-                        <input
-                          class="range-slider persist-val"
-                          id="globalPadding"
-                          max="150"
-                          min="0"
-                          type="range"
-                          value="0"
-                          style="width: 100%"
-                        />
-                      </div>
-                    </div>
-                    <div
-                      style="display: flex; flex-direction: column; gap: 5px"
-                    >
-                      <span
-                        class="label-header"
-                        style="font-size: 0.7rem; color: var(--text-muted)"
-                        >Slide it up or down (-50 to +50)</span
-                      >
-                      <div
-                        data-guide="Shifts the image vertically inside the canvas."
-                      >
-                        <input
-                          class="range-slider persist-val"
-                          id="globalImgPos"
-                          max="50"
-                          min="-50"
-                          type="range"
-                          value="0"
-                          style="width: 100%"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div class="glass-panel control-group">
-                    <span class="label-header">Getting it out</span>
-                    <div
-                      class="tiny-row"
-                      data-guide="Sets the pixel dimensions every downloaded logo will be resized to."
-                    >
-                      <input
-                        class="liquid-input"
-                        id="exportWidth"
-                        placeholder="W"
-                        type="number"
-                        value=""
-                      /><input
-                        class="liquid-input"
-                        id="exportHeight"
-                        placeholder="H"
-                        type="number"
-                        value=""
-                      />
-                    </div>
-                    <div
-                      data-guide="Select the image format for the exported logos."
-                      style="margin-top: 10px"
-                    >
-                      <select
-                        id="exportFormat"
-                        class="liquid-input persist-val"
-                        style="width: 100%"
-                      >
-                        <option value="png">PNG (.png)</option>
-                        <option value="jpeg">JPG (.jpg)</option>
-                      </select>
-                    </div>
-                    <div class="actions-group">
-                      <div
-                        data-guide="Bundles every processed logo into a single .zip file and downloads it."
-                        style="width: 100%"
-                      >
-                        <button
-                          class="liquid-btn active-mode"
-                          disabled
-                          id="exportAllBtn"
-                          style="width: 100%"
-                        >
-              Bag it all
-            </button>
-                      </div>
-                      <div
-                        data-guide="Clears every uploaded image and resets all settings back to default."
-                        style="width: 100%"
-                      >
-                        <button
-                          class="liquid-btn danger-btn"
-                          id="clearLogoBtn"
-                          style="width: 100%"
-                        >
-              Clear it. No regrets.
-            </button>
-                      </div>
-                    </div>
+              </div>
+              <div class="lz-toolbar-actions">
+                <label class="liquid-btn lz-feed-btn">
+                  <input accept="image/*,.pptx,.xlsx,.xlsm" hidden id="logoInput" multiple type="file" />
+                  <i data-lucide="upload"></i>
+                  <span class="lz-feed-label">+ Feed files</span>
+                </label>
+                <span class="lz-count-chip" id="logoCountChip">0 logos</span>
+                <button class="liquid-btn" id="logoLinkGenBtn" title="Link Generator" onclick="Tools.Logo.openLinkGen()">
+                  <i data-lucide="link"></i>
+                  Link Generator
+                </button>
+                <button class="liquid-btn active-mode" id="exportAllBtn" disabled data-guide="Bundles every processed logo into a single .zip file and downloads it.">
+                  <i data-lucide="download"></i>
+                  Download All
+                </button>
+                <div class="lz-more-wrap">
+                  <button class="liquid-btn icon-only" id="logoMoreBtn" title="More actions" type="button">
+                    <i data-lucide="more-horizontal"></i>
+                  </button>
+                  <div class="lz-more-menu" id="logoMoreMenu">
+                    <button type="button" class="lz-more-item danger" id="clearLogoBtn">
+                      <i data-lucide="trash-2"></i>
+                      Clear all logos
+                    </button>
+                    <button type="button" class="lz-more-item" onclick="GuideEngine.open(document.getElementById('section-logo'))">
+                      <i data-lucide="info"></i>
+                      Guide
+                    </button>
                   </div>
                 </div>
               </div>
-              <div class="canvas-grid" id="logoGrid">
-                <div
-                  class="empty-state-msg"
-                  id="logoEmpty"
-                  data-guide="The workspace is empty. Drop images here to begin."
-                >
-                  <i
-                    data-lucide="image"
-                    style="width: 50px; height: 50px; opacity: 0.5"
-                  ></i>
-                  <p>Empty. Like our ambition.</p>
+            </div>
+
+            <!-- drop surface (drag & drop target, whole-workspace catcher) -->
+            <div class="drop-zone" id="dropZone" data-guide="Drag images, PPTX, or Excel files here to upload and extract logos.">
+              <span class="lz-drop-hint">Or drop your problem here.</span>
+            </div>
+
+            <!-- inline extraction progress -->
+            <div class="progress-container" id="logoProgress">
+              <div class="progress-text">
+                <span id="logoStatusText">Digging through the files...</span>
+              </div>
+            </div>
+
+            <!-- ============ WORKSPACE: COMPACT RAIL | DOMINANT GRID ============ -->
+            <div class="lz-workspace">
+              <div class="lz-rail" id="logoControls">
+
+                <!-- TEXT -->
+                <div class="lz-rail-section">
+                  <span class="lz-rail-heading">TEXT</span>
+                  <label class="lz-rail-label" for="globalFontFamily">Font</label>
+                  <select class="liquid-input persist-val" id="globalFontFamily" data-guide="Sets the typeface used for the text overlay on every logo card.">
+                    <option value="Arial">Arial</option>
+                    <option value="Century Gothic">Century Gothic</option>
+                    <option value="Calibri">Calibri</option>
+                    <option value="Comic Sans MS">Comic Sans MS</option>
+                    <option value="Courier New">Courier New</option>
+                    <option value="Georgia">Georgia</option>
+                    <option value="Impact">Impact</option>
+                    <option value="Lucida Console">Lucida Console</option>
+                    <option value="Palatino Linotype">Palatino Linotype</option>
+                    <option value="Segoe UI">Segoe UI</option>
+                    <option value="Tahoma">Tahoma</option>
+                    <option value="Times New Roman">Times New Roman</option>
+                    <option value="Trebuchet MS">Trebuchet MS</option>
+                    <option value="Verdana">Verdana</option>
+                    <option value="sans-serif">Default Sans</option>
+                  </select>
+
+                  <div class="lz-rail-row" data-guide="Sets the text size and colour for the overlay. Leave size blank to auto-size.">
+                    <div class="lz-rail-col">
+                      <label class="lz-rail-label" for="fontSizeInput">Size</label>
+                      <input class="liquid-input persist-val" id="fontSizeInput" placeholder="Auto" type="number" />
+                    </div>
+                    <div class="lz-rail-col">
+                      <label class="lz-rail-label" for="fontColorPicker">Colour</label>
+                      <input id="fontColorPicker" class="persist-val lz-color-input" type="color" value="#000000" title="Font Colour" />
+                    </div>
+                  </div>
+
+                  <label class="lz-rail-check" data-guide="Toggles bold font weight for the overlay text.">
+                    <input class="toggle-switch small persist-chk" id="boldToggle" type="checkbox" /> Bold
+                  </label>
+                  <label class="lz-rail-check" data-guide="Synchronizes the exported filename with the overlay text.">
+                    <input class="toggle-switch small persist-chk" id="syncFilenameToggle" type="checkbox" checked /> Use filename as text
+                  </label>
+                </div>
+
+                <!-- IMAGE -->
+                <div class="lz-rail-section">
+                  <span class="lz-rail-heading">IMAGE</span>
+                  <label class="lz-rail-label" for="globalPadding">Padding <span class="lz-range-hint" id="globalPaddingVal">0</span></label>
+                  <input class="range-slider persist-val" id="globalPadding" max="150" min="0" type="range" value="0" data-guide="Adds empty space around the image inside the export canvas, from 0 to 150px." />
+                  <label class="lz-rail-label lz-range-ends"><span>UP</span><span>Position</span><span>DOWN</span></label>
+                  <input class="range-slider persist-val" id="globalImgPos" max="50" min="-50" type="range" value="0" data-guide="Shifts the image vertically inside the canvas." />
+                </div>
+
+                <!-- EXPORT -->
+                <div class="lz-rail-section">
+                  <span class="lz-rail-heading">EXPORT</span>
+                  <div class="lz-rail-row" data-guide="Sets the pixel dimensions every downloaded logo will be resized to.">
+                    <div class="lz-rail-col">
+                      <label class="lz-rail-label" for="exportWidth">Width</label>
+                      <input class="liquid-input" id="exportWidth" placeholder="Auto" type="number" value="" />
+                    </div>
+                    <div class="lz-rail-col">
+                      <label class="lz-rail-label" for="exportHeight">Height</label>
+                      <input class="liquid-input" id="exportHeight" placeholder="Auto" type="number" value="" />
+                    </div>
+                  </div>
+                  <label class="lz-rail-label" for="exportFormat">Format</label>
+                  <select id="exportFormat" class="liquid-input persist-val" data-guide="Select the image format for the exported logos.">
+                    <option value="png">PNG</option>
+                    <option value="jpeg">JPG</option>
+                  </select>
+
+
+                </div>
+
+              </div>
+
+              <!-- THE PRIMARY WORKSPACE -->
+              <div class="lz-grid-wrap">
+                <div class="canvas-grid" id="logoGrid">
+                  <div class="empty-state-msg lz-empty" id="logoEmpty" data-guide="The workspace is empty. Drop images here to begin.">
+                    <img class="lz-empty-mascot" src="Lapssy logo.png" alt="" draggable="false">
+                    <p class="lz-empty-title">Feed me the files.</p>
+                    <p class="lz-empty-sub">Images, PowerPoint or Excel. I'll dig the logos out.</p>
+
+                    <p class="lz-empty-drop">Or drop your problem here.</p>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-
-          <div class="tool-section" id="section-pdf">
+<div class="tool-section" id="section-pdf">
             <div class="tool-header">
               <i data-lucide="layers" class="tool-icon"></i>
               <h2 style="flex: 1">PDF Tools</h2>
@@ -2091,308 +1943,76 @@
     </div>
 
     <div class="overlay-fixed" id="logoDetailOverlay">
-      <div
-        class="overlay-content"
-        style="
-          max-width: 1000px;
-          width: 90%;
-          padding: 0;
-          display: flex;
-          flex-direction: column;
-          background: var(--bg-panel);
-          border: 1px solid var(--border);
-          border-radius: 6px;
-          overflow: hidden;
-          margin: auto;
-          box-shadow: var(--shadow-block);
-        "
-      >
-        <div
-          style="
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--border);
-            padding: 15px 20px;
-          "
-        >
-          <div style="display: flex; align-items: center; gap: 15px">
-            <input
-              class="liquid-input"
-              id="logoDetailFname"
-              placeholder="Filename"
-              style="
-                font-family: &quot;Inter&quot;, sans-serif;
-                font-size: 1.4rem;
-                font-weight: 600;
-                width: 180px;
-                background: transparent;
-                border: 1px solid transparent;
-                padding: 2px 8px;
-                height: auto;
-                outline: none;
-              "
-            />
-            <span
-              id="logoDetailIndex"
-              style="
-                font-size: 0.85rem;
-                color: var(--text-muted);
-                background: var(--bg-input);
-                padding: 3px 8px;
-                border-radius: 6px;
-                border: 1px solid var(--border);
-              "
-            ></span>
+      <div class="overlay-content lz-focus" role="dialog" aria-modal="true" aria-label="Logo Focus Mode">
 
-            <div
-              style="
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                margin-left: 15px;
-              "
-              data-guide="Set a specific font size for the text wrapper. This overrides the global font size setting."
-            >
-              <span
-                style="
-                  font-size: 0.8rem;
-                  font-weight: bold;
-                  color: var(--text-muted);
-                "
-                >Size (we decide otherwise):</span
-              >
-              <input
-                type="number"
-                class="liquid-input"
-                id="logoDetailFontSize"
-                placeholder="Auto"
-                style="width: 100px; height: 30px; font-size: 0.85rem"
-              />
-            </div>
+        <!-- top bar: back / filename / close -->
+        <div class="lz-focus-top">
+          <button class="liquid-btn" id="logoDetailClose" title="Back to logos">
+            <i data-lucide="arrow-left"></i> Back to logos
+          </button>
+          <span class="lz-focus-name" id="logoDetailTitle">logo</span>
+          <button class="liquid-btn icon-only danger-btn" id="logoDetailCloseX" aria-label="Close">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+
+        <!-- body: large preview | right inspector -->
+        <div class="lz-focus-body">
+
+          <div class="lz-focus-preview" data-guide="Full-sized, pixel-accurate preview of what the exported logo will look like.">
+            <canvas id="logoDetailCanvas"></canvas>
+            <div class="lz-focus-hint">Arrow keys to navigate &bull; Esc to close</div>
           </div>
-          <div style="display: flex; gap: 10px">
-            <button
-              class="liquid-btn icon-only guide-trigger"
-              onclick="
-                GuideEngine.openOverlayGuide(
-                  document.getElementById('logoDetailOverlay'),
-                )
-              "
-            >
-              <i data-lucide="info"></i>
-            </button>
-            <button
-              class="liquid-btn active-mode"
-              id="logoDetailDownload"
-              data-guide="Download this final logo with all adjustments applied."
-            >
-              <i data-lucide="download"></i>
-              Fine, save PNG
-            </button>
-            <button
-              class="liquid-btn icon-only"
-              id="logoDetailClose"
-              data-guide="Close Focus Mode and return to the grid."
-            >
-              <i data-lucide="x"></i>
-            </button>
+
+          <div class="lz-focus-inspector">
+
+            <div class="lz-focus-group">
+              <span class="lz-focus-heading">FILE</span>
+              <label class="lz-focus-label" for="logoDetailFname">Filename</label>
+              <input class="liquid-input" id="logoDetailFname" placeholder="Filename" />
+            </div>
+
+            <div class="lz-focus-group">
+              <span class="lz-focus-heading">TEXT</span>
+              <label class="lz-focus-label" for="logoDetailText">Overlay text</label>
+              <textarea class="liquid-input" id="logoDetailText" rows="3" placeholder="Overlay text..."></textarea>
+              <label class="lz-focus-label" for="logoDetailFontSize">Font size</label>
+              <input type="number" class="liquid-input" id="logoDetailFontSize" placeholder="Auto" />
+            </div>
+
+            <div class="lz-focus-group">
+              <span class="lz-focus-heading">IMAGE</span>
+              <label class="lz-focus-label" for="logoDetailImgSlider">Position (up / down)</label>
+              <input type="range" class="range-slider" id="logoDetailImgSlider" min="-50" max="50" value="0" data-guide="Fine-tune the vertical alignment of the image." />
+              <label class="lz-focus-label" for="logoDetailTxtSlider">Text position</label>
+              <input type="range" class="range-slider" id="logoDetailTxtSlider" min="0" max="100" value="90" data-guide="Fine-tune the vertical position of the label text." />
+              <label class="lz-focus-label" for="logoDetailPaddingSlider">Padding</label>
+              <input type="range" class="range-slider" id="logoDetailPaddingSlider" min="0" max="150" value="0" data-guide="Adjust the internal padding strictly for this logo image." />
+              <button class="lz-focus-reset" id="logoDetailResetPadding" data-guide="Reset this logo's padding to the global value.">Reset padding</button>
+            </div>
+
+            <div class="lz-focus-actions">
+              <button class="liquid-btn active-mode" id="logoDetailDownload" data-guide="Download this final logo with all adjustments applied.">
+                <i data-lucide="download"></i> Download
+              </button>
+              <button class="liquid-btn danger-btn" id="logoDetailDelete" data-guide="Remove this logo permanently from the workspace.">
+                <i data-lucide="trash-2"></i> Delete
+              </button>
+            </div>
+
           </div>
         </div>
 
-        <div
-          class="responsive-editor-layout"
-          style="display: flex; flex: 1; min-height: 15vh; overflow: hidden"
-        >
-          <!-- Left: Preview Canvas -->
-          <div
-            class="responsive-editor-left"
-            style="
-              flex: 1;
-              display: flex;
-              flex-direction: column;
-              position: relative;
-              background: var(--bg-main);
-              overflow: hidden;
-            "
-          >
-            <div
-              style="
-                position: absolute;
-                inset: 0;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                background-image: radial-gradient(
-                  var(--border) 1px,
-                  transparent 1px
-                );
-                background-size: 20px 20px;
-              "
-              data-guide="Full-sized, pixel-accurate preview of what the exported logo will look like."
-            >
-              <canvas
-                id="logoDetailCanvas"
-                style="
-                  max-width: 90%;
-                  max-height: 80%;
-                  border: 1px solid var(--border);
-                  box-shadow: var(--shadow-block);
-                  transition: transform 0.2s;
-                "
-              ></canvas>
-            </div>
-
-            <div
-              style="
-                position: absolute;
-                bottom: 15px;
-                width: 100%;
-                text-align: center;
-                font-size: 0.8rem;
-                color: var(--text-muted);
-                pointer-events: none;
-              "
-            >
-              Press Arrow Keys (← / →) to navigate • Esc to Close
-            </div>
-          </div>
-
-          <!-- Right: Editing Panel -->
-          <div
-            class="responsive-editor-right"
-            style="
-              background: var(--bg-input);
-              border-left: 1px solid var(--border);
-              display: grid;
-              grid-template-columns: 1fr 1fr;
-              padding: 20px;
-              gap: 20px;
-              overflow-y: auto;
-              flex-shrink: 0;
-            "
-          >
-            <div
-              class="glass-panel control-group"
-              style="margin: 0"
-              data-guide="Add or update text displayed along with this specific logo."
-            >
-              <span class="label-header">Scribble on it</span>
-              <textarea
-                class="liquid-input"
-                id="logoDetailText"
-                rows="3"
-                placeholder="Overlay text..."
-                style="resize: vertical"
-              ></textarea>
-            </div>
-
-            <div class="glass-panel control-group" style="margin: 0">
-              <span class="label-header">Padding & nudging</span>
-              <div
-                style="
-                  display: flex;
-                  flex-direction: column;
-                  gap: 5px;
-                  margin-bottom: 10px;
-                "
-                data-guide="Adjust the internal padding strictly for this logo image. Useful for correcting images tightly cropped to their borders."
-              >
-                <div
-                  style="
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                  "
-                >
-                  <span
-                    class="label-header"
-                    style="font-size: 0.7rem; color: var(--text-muted)"
-                    >Image Padding</span
-                  >
-                  <button
-                    id="logoDetailResetPadding"
-                    style="
-                      background: none;
-                      border: none;
-                      color: var(--text-muted);
-                      font-size: 0.7rem;
-                      cursor: pointer;
-                      padding: 0;
-                    "
-                  > Back to the default padding </button>
-                </div>
-                <input
-                  type="range"
-                  class="range-slider"
-                  id="logoDetailPaddingSlider"
-                  min="0"
-                  max="150"
-                  value="0"
-                />
-              </div>
-
-              <div
-                style="
-                  display: flex;
-                  flex-direction: column;
-                  gap: 5px;
-                  margin-bottom: 10px;
-                "
-                data-guide="Fine-tune the horizontal (Y) alignment offset of the image."
-              >
-                <span
-                  class="label-header"
-                  style="font-size: 0.7rem; color: var(--text-muted)"
-                  >Image Y Offset</span
-                >
-                <input
-                  type="range"
-                  class="range-slider"
-                  id="logoDetailImgSlider"
-                  min="-50"
-                  max="50"
-                  value="0"
-                />
-              </div>
-
-              <div
-                style="display: flex; flex-direction: column; gap: 5px"
-                data-guide="Fine-tune the vertical (Y) offset placement for the label text."
-              >
-                <span
-                  class="label-header"
-                  style="font-size: 0.7rem; color: var(--text-muted)"
-                  >Text Y Offset</span
-                >
-                <input
-                  type="range"
-                  class="range-slider"
-                  id="logoDetailTxtSlider"
-                  min="0"
-                  max="100"
-                  value="90"
-                />
-              </div>
-            </div>
-
-            <div style="grid-column: 1 / -1; margin-top: auto">
-              <button
-                class="liquid-btn danger-btn"
-                id="logoDetailDelete"
-                style="width: 100%; border: 1px solid var(--danger)"
-                data-guide="Remove this logo permanently from the workspace."
-              >
-                <i data-lucide="trash-2"></i>
-              Delete this one
-            </button>
-            </div>
-          </div>
+        <!-- footer: prev / index / next -->
+        <div class="lz-focus-foot">
+          <button class="liquid-btn" id="logoDetailPrev"><i data-lucide="arrow-left"></i> Previous</button>
+          <span class="lz-focus-count" id="logoDetailIndex"></span>
+          <button class="liquid-btn" id="logoDetailNext">Next <i data-lucide="arrow-right"></i></button>
         </div>
+
       </div>
     </div>
-
-    <div class="overlay-fixed" id="logoLinkGenOverlay">
+<div class="overlay-fixed" id="logoLinkGenOverlay">
       <div
         style="
           background: var(--bg-panel);
